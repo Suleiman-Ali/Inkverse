@@ -1,7 +1,7 @@
 import Product from '../models/product-model';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { successJson, failureJson } from '../utils/json';
-import Category from '../models/category-model';
+import { manipulate } from '../utils/queryManipulation';
 
 export async function createProduct(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -23,8 +23,12 @@ export async function createProduct(req: NextApiRequest, res: NextApiResponse) {
 
 export async function readProducts(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const products = Product.find().populate('categories');
-    res.status(200).json(successJson({ products }));
+    const [products, count] = await manipulate(
+      Product.find().populate('categories'),
+      req.query,
+      'product'
+    );
+    res.status(200).json(successJson({ products, count }));
   } catch (e) {
     res.status(400).json(failureJson('Could not perform operation'));
   }

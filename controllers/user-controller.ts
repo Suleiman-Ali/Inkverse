@@ -2,6 +2,7 @@ import User from '../models/user-model';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { successJson, failureJson } from '../utils/json';
 import { hashPassword } from '../utils/passwordCrypt';
+import { manipulate } from '../utils/queryManipulation';
 
 export async function createUser(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -21,8 +22,8 @@ export async function createUser(req: NextApiRequest, res: NextApiResponse) {
 
 export async function readUsers(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const users = await User.find();
-    res.status(200).json(successJson({ users }));
+    const [users, count] = await manipulate(User.find(), req.query, 'user');
+    res.status(200).json(successJson({ users, count }));
   } catch (e) {
     res.status(400).json(failureJson('Could not perform operation'));
   }

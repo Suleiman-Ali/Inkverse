@@ -12,6 +12,12 @@ const ReviewSchema = new mongoose.Schema({
     ref: 'Product',
     required: [true, 'Product is required'],
   },
+  rate: {
+    type: Number,
+    min: [0, 'Min must be at least 0'],
+    max: [5, 'Max must be at most 5'],
+    required: [true, 'Rate is required'],
+  },
 });
 const Review = mongoose.models.Review || mongoose.model('Review', ReviewSchema);
 export default Review;

@@ -1,6 +1,7 @@
 import CartProduct from '../models/cart-product-model';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { successJson, failureJson } from '../utils/json';
+import { manipulate } from '../utils/queryManipulation';
 
 export async function createCartProduct(
   req: NextApiRequest,
@@ -21,10 +22,11 @@ export async function readCartProducts(
 ) {
   try {
     const { id } = req.query;
-    const cartProducts = await CartProduct.find({ user: id }).populate(
-      'product'
+    const [cartProducts, count] = await manipulate(
+      CartProduct.find({ user: id }).populate('product'),
+      req.query
     );
-    res.status(200).json(successJson({ cartProducts }));
+    res.status(200).json(successJson({ cartProducts, count }));
   } catch (err) {
     res.status(400).json(failureJson('Could not perform operation'));
   }
