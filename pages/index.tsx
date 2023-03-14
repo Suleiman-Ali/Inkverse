@@ -2,9 +2,10 @@ export default function Home() {
   return <div></div>;
 }
 
-// TODO: Searching & Filtering & Sorting & Field Limiting & Pagination
-// TODO: Image Uploads
+// NOTE (Partly DONE): Searching & Filtering & Sorting & Field Limiting & Pagination
+// NOTE (Partly DONE): Image Uploads
+// TODO: Refactoring
 // TODO: Payment & Order
 // TODO: Error Handling
-// TODO: Password Reset & Login
+// TODO: Image Update & Password Reset & Login
 // TODO: Auths & Protection

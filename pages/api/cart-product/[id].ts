@@ -1,4 +1,4 @@
-import dbConnect from '../../../utils/dbConnect';
+import dbConnect from '../../../utils/db-connect';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   deleteCartProduct,

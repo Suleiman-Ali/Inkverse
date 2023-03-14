@@ -1,19 +1,17 @@
 import User from '../models/user-model';
+import manipulate from '../utils/query-manipulation';
+import { hashPassword } from '../utils/password-crypt';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { successJson, failureJson } from '../utils/json';
-import { hashPassword } from '../utils/passwordCrypt';
-import { manipulate } from '../utils/queryManipulation';
+import { uploadImage } from '../utils/image-upload';
+import { deleteProperties } from '../utils/helpers';
 
-export async function createUser(req: NextApiRequest, res: NextApiResponse) {
+export async function createUser(req: any, res: NextApiResponse) {
   try {
-    const { name, email, password, image } = req.body;
-    const hashedPassword = await hashPassword(password);
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      image,
-    });
+    const { name, email, password: originalPassword } = req.body;
+    const image = await uploadImage(req.file, 'user', 'png', [100, 100]);
+    const password = await hashPassword(originalPassword);
+    const user = await User.create({ name, email, password, image });
     res.status(201).json(successJson({ user }));
   } catch (err: any) {
     res.status(400).json(failureJson('Could not perform operation'));
@@ -42,13 +40,8 @@ export async function readUser(req: NextApiRequest, res: NextApiResponse) {
 export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
-    delete req.body?.password;
-    delete req.body?.role;
-    delete req.body?.active;
-    const user = await User.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    deleteProperties(req.body, 'password', 'role', 'active', 'image');
+    const user = await User.findByIdAndUpdate(id, req.body);
     res.status(200).json(successJson({ user }));
   } catch (err) {
     res.status(400).json(failureJson('Could not perform operation'));

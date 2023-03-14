@@ -1,7 +1,7 @@
 import Category from '../models/category-model';
+import manipulate from '../utils/query-manipulation';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { failureJson, successJson } from '../utils/json';
-import { manipulate } from '../utils/queryManipulation';
 
 export async function createCategory(
   req: NextApiRequest,
@@ -34,10 +34,7 @@ export async function updateCategory(
 ) {
   try {
     const { id } = req.query;
-    const category = await Category.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const category = await Category.findByIdAndUpdate(id, req.body);
     res.status(200).json(successJson({ category }));
   } catch (err) {
     res.status(400).json(failureJson('Could not perform operation'));

@@ -26,7 +26,7 @@ function paginateQuery(page: number, limit: number, query: Query<any, any>) {
   return query.skip(skip).limit(limitCalc);
 }
 
-export async function manipulate(
+export default async function manipulate(
   inputQuery: Query<any, any>,
   queryObj: any,
   type?: string

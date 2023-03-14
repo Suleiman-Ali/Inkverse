@@ -13,6 +13,7 @@ const CartProductSchema = new mongoose.Schema({
   },
   quantity: { type: Number, default: 1 },
 });
+
 const CartProduct =
   mongoose.models.CartProduct ||
   mongoose.model('CartProduct', CartProductSchema);

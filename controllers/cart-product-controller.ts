@@ -1,7 +1,8 @@
 import CartProduct from '../models/cart-product-model';
+import manipulate from '../utils/query-manipulation';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { successJson, failureJson } from '../utils/json';
-import { manipulate } from '../utils/queryManipulation';
+import { deleteProperties } from '../utils/helpers';
 
 export async function createCartProduct(
   req: NextApiRequest,
@@ -38,12 +39,8 @@ export async function updateCartProduct(
 ) {
   try {
     const { id } = req.query;
-    delete req.body?.user;
-    delete req.body?.product;
-    const cartProduct = await CartProduct.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    deleteProperties(req.body, 'user', 'product');
+    const cartProduct = await CartProduct.findByIdAndUpdate(id, req.body);
     res.status(200).json(successJson({ cartProduct }));
   } catch (err) {
     res.status(400).json(failureJson('Could not perform operation'));

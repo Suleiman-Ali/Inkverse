@@ -1,7 +1,8 @@
 import Review from '../models/review-model';
+import manipulate from '../utils/query-manipulation';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { successJson, failureJson } from '../utils/json';
-import { manipulate } from '../utils/queryManipulation';
+import { deleteProperties } from '../utils/helpers';
 
 export async function createReview(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -30,12 +31,8 @@ export async function readReviews(req: NextApiRequest, res: NextApiResponse) {
 export async function updateReview(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
-    delete req.body?.user;
-    delete req.body?.product;
-    const review = await Review.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    deleteProperties(req.body, 'user', 'product');
+    const review = await Review.findByIdAndUpdate(id, req.body);
     res.status(200).json(successJson({ review }));
   } catch (err) {
     res.status(400).json(failureJson('Could not perform operation'));
