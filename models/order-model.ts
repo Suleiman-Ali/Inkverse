@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { isIncludesAtLeastOne } from '../utils/helpers';
 
 const OrderSchema = new mongoose.Schema({
+  paymentId: [String, 'Payment ID is required'],
   user: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
@@ -16,6 +17,10 @@ const OrderSchema = new mongoose.Schema({
     ],
     required: [true, 'Products is required'],
     validate: [isIncludesAtLeastOne, 'Order must have at least 1 product'],
+  },
+  amount: {
+    type: Number,
+    required: [true, 'Amount is required'],
   },
 });
 const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
