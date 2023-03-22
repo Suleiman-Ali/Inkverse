@@ -1,61 +1,43 @@
 import CartProduct from '../models/cart-product-model';
 import manipulate from '../utils/query-manipulation';
+import json from '../utils/json';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { successJson, failureJson } from '../utils/json';
-import { deleteProperties } from '../utils/helpers';
 
 export async function createCartProduct(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    const { user, product } = req.body;
-    const cartProduct = await CartProduct.create({ user, product });
-    res.status(201).json(successJson({ cartProduct }));
-  } catch (err: any) {
-    res.status(400).json(failureJson('Could not perform operation'));
-  }
+  const { user, product, quantity } = req.body;
+  const cartProduct = await CartProduct.create({ user, product, quantity });
+  res.status(201).json(json({ cartProduct }));
 }
 
 export async function readCartProducts(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    const { id } = req.query;
-    const [cartProducts, count] = await manipulate(
-      CartProduct.find({ user: id }).populate('product'),
-      req.query
-    );
-    res.status(200).json(successJson({ cartProducts, count }));
-  } catch (err) {
-    res.status(400).json(failureJson('Could not perform operation'));
-  }
+  const { id } = req.query;
+  const [cartProducts, count] = await manipulate(
+    CartProduct.find({ user: id }),
+    req.query
+  );
+  res.status(200).json(json({ cartProducts, count }));
 }
 
 export async function updateCartProduct(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    const { id } = req.query;
-    deleteProperties(req.body, 'user', 'product');
-    const cartProduct = await CartProduct.findByIdAndUpdate(id, req.body);
-    res.status(200).json(successJson({ cartProduct }));
-  } catch (err) {
-    res.status(400).json(failureJson('Could not perform operation'));
-  }
+  const { id } = req.query;
+  const cartProduct = await CartProduct.findByIdAndUpdate(id, req.body);
+  res.status(200).json(json({ cartProduct }));
 }
 
 export async function deleteCartProduct(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    const { id } = req.query;
-    const cartProduct = await CartProduct.findByIdAndDelete(id);
-    res.status(200).json(successJson(null));
-  } catch (err) {
-    res.status(400).json(failureJson('Could not perform operation'));
-  }
+  const { id } = req.query;
+  const cartProduct = await CartProduct.findByIdAndDelete(id);
+  res.status(200).json(json({}));
 }

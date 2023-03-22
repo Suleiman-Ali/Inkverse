@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 import streamifier from 'streamifier';
-import cloudinary from './cloudinary-config';
+import cloudinary from '../configs/cloudinary-config';
 
 function constructImageName(originalname: string, folder: string) {
   const name = `${folder}-${originalname.split('.')[0].trim().toLowerCase()}`;

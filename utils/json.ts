@@ -1,7 +1,5 @@
-export function successJson(data: any) {
-  return { status: 'success', data };
-}
-
-export function failureJson(message: string) {
-  return { status: 'fail', message };
+export default function json(data: string | Record<string, any>) {
+  const [status, payloadKey] =
+    typeof data !== 'string' ? ['success', 'data'] : ['failure', 'message'];
+  return { status, [payloadKey]: data };
 }

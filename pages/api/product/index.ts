@@ -1,17 +1,22 @@
 import nextConnect from 'next-connect';
-import upload from '../../../utils/multer-config';
+import upload from '../../../configs/multer-config';
+import dbConnectMiddleware from '../../../middleware/db-connect-middleware';
+import globalErrorHandler from '../../../middleware/error-middleware';
+import globalNoMatchHandler from '../../../middleware/no-match-middleware';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   createProduct,
   readProducts,
 } from '../../../controllers/product-controller';
-import { dbConnectMiddleware } from '../../../utils/db-connect';
 
-const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({});
-apiRoute.use(upload.array('images', 4));
+const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({
+  onError: globalErrorHandler,
+  onNoMatch: globalNoMatchHandler,
+});
 apiRoute.use(dbConnectMiddleware);
-apiRoute.post(createProduct);
+apiRoute.post(upload.array('images', 4), createProduct);
 apiRoute.get(readProducts);
+
 export default apiRoute;
 export const config = {
   api: {

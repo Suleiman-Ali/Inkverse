@@ -1,3 +1,4 @@
+import Product from './product-model';
 import mongoose from 'mongoose';
 
 const CartProductSchema = new mongoose.Schema({
@@ -12,6 +13,16 @@ const CartProductSchema = new mongoose.Schema({
     required: [true, 'Product is required'],
   },
   quantity: { type: Number, default: 1 },
+});
+
+CartProductSchema.pre('findOneAndUpdate', function (next) {
+  this.setOptions({ new: true, runValidators: true });
+  next();
+});
+
+CartProductSchema.pre(/^find/, function (next) {
+  this.populate('product', null, Product);
+  next();
 });
 
 const CartProduct =

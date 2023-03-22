@@ -1,11 +1,14 @@
-import dbConnect from '../../../utils/db-connect';
+import nextConnect from 'next-connect';
+import dbConnectMiddleware from '../../../middleware/db-connect-middleware';
+import globalErrorHandler from '../../../middleware/error-middleware';
+import globalNoMatchHandler from '../../../middleware/no-match-middleware';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createOrder } from '../../../controllers/order-controller';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  await dbConnect();
-  if (req.method === 'POST') return createOrder(req, res);
-}
+const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({
+  onError: globalErrorHandler,
+  onNoMatch: globalNoMatchHandler,
+});
+apiRoute.use(dbConnectMiddleware);
+apiRoute.post(createOrder);
+export default apiRoute;

@@ -1,4 +1,8 @@
-import dbConnect from '../../../utils/db-connect';
+import nextConnect from 'next-connect';
+import dbConnectMiddleware from '../../../middleware/db-connect-middleware';
+import globalErrorHandler from '../../../middleware/error-middleware';
+import globalNoMatchHandler from '../../../middleware/no-match-middleware';
+import filterReqBody from '../../../middleware/filter-body-middleware';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   deleteCartProduct,
@@ -6,12 +10,12 @@ import {
   updateCartProduct,
 } from '../../../controllers/cart-product-controller';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  await dbConnect();
-  if (req.method === 'GET') return readCartProducts(req, res);
-  if (req.method === 'PATCH') return updateCartProduct(req, res);
-  if (req.method === 'DELETE') return deleteCartProduct(req, res);
-}
+const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({
+  onError: globalErrorHandler,
+  onNoMatch: globalNoMatchHandler,
+});
+apiRoute.use(dbConnectMiddleware);
+apiRoute.get(readCartProducts);
+apiRoute.patch(filterReqBody('user', 'product'), updateCartProduct);
+apiRoute.delete(deleteCartProduct);
+export default apiRoute;

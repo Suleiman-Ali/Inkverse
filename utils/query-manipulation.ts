@@ -31,6 +31,8 @@ export default async function manipulate(
   queryObj: any,
   type?: string
 ) {
+  return [await inputQuery, 0];
+
   const { sort, fields, page, limit } = queryObj;
   let query: any;
   let count: any;

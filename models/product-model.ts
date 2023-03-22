@@ -1,5 +1,6 @@
+import Category from './category-model';
 import mongoose from 'mongoose';
-import { isIncludesAtLeastOne } from '../utils/helpers';
+import _ from 'lodash';
 
 const ProductSchema = new mongoose.Schema({
   name: { type: String, required: [true, 'Name is required'] },
@@ -13,14 +14,26 @@ const ProductSchema = new mongoose.Schema({
   images: {
     type: [String],
     required: [true, 'Images is required'],
-    validate: [isIncludesAtLeastOne, 'Product must have at least 1 image'],
+    validate: [_.negate(_.isEmpty), 'Product must have at least 1 image'],
   },
   categories: {
     type: [{ type: mongoose.Types.ObjectId, ref: 'Category' }],
     required: [true, 'Categories is required'],
-    validate: [isIncludesAtLeastOne, 'Product must have at least 1 category'],
   },
+  available: { type: Boolean, default: true },
+  createdAt: { type: Number, default: Date.now },
 });
+
+ProductSchema.pre('findOneAndUpdate', function (next) {
+  this.setOptions({ new: true, runValidators: true });
+  next();
+});
+
+ProductSchema.pre(/^find/, function (next) {
+  this.populate('categories', null, Category);
+  next();
+});
+
 const Product =
   mongoose.models.Product || mongoose.model('Product', ProductSchema);
 export default Product;

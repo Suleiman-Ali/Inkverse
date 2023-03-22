@@ -1,8 +1,10 @@
+import Product from './product-model';
 import mongoose from 'mongoose';
-import { isIncludesAtLeastOne } from '../utils/helpers';
+import CartProduct from './cart-product-model';
+import _ from 'lodash';
+import { filterUnavailableCartProducts } from '../utils/helper-functions';
 
 const OrderSchema = new mongoose.Schema({
-  paymentId: [String, 'Payment ID is required'],
   user: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
@@ -16,12 +18,32 @@ const OrderSchema = new mongoose.Schema({
       },
     ],
     required: [true, 'Products is required'],
-    validate: [isIncludesAtLeastOne, 'Order must have at least 1 product'],
+    validate: [_.negate(_.isEmpty), 'Order must have at least 1 product'],
+  },
+  paymentId: {
+    type: String,
+    required: [true, 'Payment Id is required'],
   },
   amount: {
     type: Number,
     required: [true, 'Amount is required'],
   },
+  createdAt: { type: Number, default: Date.now },
 });
+
+OrderSchema.pre(/^find/, function (next) {
+  this.populate('products', null, Product);
+  next();
+});
+
+OrderSchema.post(/^save/, async function (doc) {
+  const cartProducts = await CartProduct.find({ user: doc.user });
+  const cartProductIds = filterUnavailableCartProducts(cartProducts).map(
+    (cartProduct) => cartProduct._id
+  );
+  if (cartProductIds.length > 0)
+    await CartProduct.deleteMany({ _id: { $in: cartProductIds } });
+});
+
 const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
 export default Order;

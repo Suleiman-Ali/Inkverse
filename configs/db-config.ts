@@ -6,8 +6,3 @@ export default async function dbConnect() {
     .then(() => console.log('DB connection was successful'))
     .catch(() => console.log('DB connection failed'));
 }
-
-export async function dbConnectMiddleware(req: any, res: any, next: any) {
-  await dbConnect();
-  next();
-}

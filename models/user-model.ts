@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 
 const UserSchema = new mongoose.Schema({
-  role: { type: String, default: 'user', enum: ['user', 'admin'] },
   name: {
     type: String,
     unique: [true, 'Name must be unique'],
@@ -23,10 +22,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Image is required'],
   },
-  active: {
-    type: Boolean,
-    default: true,
-  },
+  role: { type: String, default: 'user', enum: ['user', 'admin'] },
+  active: { type: Boolean, default: true },
+  createdAt: { type: Number, default: Date.now },
 });
+
+UserSchema.pre('findOneAndUpdate', function (next) {
+  this.setOptions({ new: true, runValidators: true });
+  next();
+});
+
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 export default User;

@@ -1,13 +1,18 @@
 import nextConnect from 'next-connect';
-import upload from '../../../utils/multer-config';
+import upload from '../../../configs/multer-config';
+import dbConnectMiddleware from '../../../middleware/db-connect-middleware';
+import globalErrorHandler from '../../../middleware/error-middleware';
+import globalNoMatchHandler from '../../../middleware/no-match-middleware';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createUser } from '../../../controllers/user-controller';
-import { dbConnectMiddleware } from '../../../utils/db-connect';
 
-const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({});
-apiRoute.use(upload.single('image'));
+const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({
+  onError: globalErrorHandler,
+  onNoMatch: globalNoMatchHandler,
+});
 apiRoute.use(dbConnectMiddleware);
-apiRoute.post(createUser);
+apiRoute.post(upload.single('image'), createUser);
+
 export default apiRoute;
 export const config = {
   api: {
