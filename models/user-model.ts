@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
+import { hashPassword } from '../utils/password-crypt';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -11,7 +12,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Email is required'],
     unique: [true, 'Email must be unique'],
-    validator: [validator.isEmail, 'Email must be valid'],
+    validate: [validator.isEmail, 'Email must be valid'],
   },
   password: {
     type: String,
@@ -25,6 +26,17 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, default: 'user', enum: ['user', 'admin'] },
   active: { type: Boolean, default: true },
   createdAt: { type: Number, default: Date.now },
+});
+
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await hashPassword(this.password);
+  next();
+});
+
+UserSchema.pre(/^find/, function (next) {
+  this.select('-__v');
+  next();
 });
 
 UserSchema.pre('findOneAndUpdate', function (next) {

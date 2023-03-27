@@ -31,10 +31,8 @@ export default async function manipulate(
   queryObj: any,
   type?: string
 ) {
-  return [await inputQuery, 0];
-
   const { sort, fields, page, limit } = queryObj;
-  let query: any;
+  let query = inputQuery;
   let count: any;
   let filter: any = {};
 
@@ -44,13 +42,22 @@ export default async function manipulate(
     if (category) filter.categories = { $in: category };
     if (minPrice && maxPrice) filter.price = { $gte: minPrice, $lte: maxPrice };
   } else if (type === 'user') {
-    const { name, role, active } = queryObj;
+    const { name, email, role, active } = queryObj;
     if (name) filter.name = new RegExp(name, 'i');
+    if (email) filter.email = new RegExp(email, 'i');
     if (role) filter.role = { $eq: role };
     if (active) filter.active = { $eq: active };
   } else if (type === 'review') {
     const { rate } = queryObj;
     if (rate) filter.rate = { $eq: rate };
+  } else if (type === 'cartProduct') {
+    const { minQuantity, maxQuantity } = queryObj;
+    if (minQuantity && maxQuantity)
+      filter.quantity = { $gte: minQuantity, $lte: maxQuantity };
+  } else if (type === 'order') {
+    const { minAmount, maxAmount } = queryObj;
+    if (minAmount && maxAmount)
+      filter.amount = { $gte: minAmount, $lte: maxAmount };
   }
 
   query = filterQuery(filter, inputQuery);

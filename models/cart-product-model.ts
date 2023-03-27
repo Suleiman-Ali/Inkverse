@@ -12,7 +12,11 @@ const CartProductSchema = new mongoose.Schema({
     ref: 'Product',
     required: [true, 'Product is required'],
   },
-  quantity: { type: Number, default: 1 },
+  quantity: {
+    type: Number,
+    default: 1,
+    min: [1, 'Quantity must be at least 1'],
+  },
 });
 
 CartProductSchema.pre('findOneAndUpdate', function (next) {
@@ -22,6 +26,7 @@ CartProductSchema.pre('findOneAndUpdate', function (next) {
 
 CartProductSchema.pre(/^find/, function (next) {
   this.populate('product', null, Product);
+  this.select('-__v');
   next();
 });
 

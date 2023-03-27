@@ -1,14 +1,12 @@
 import User from '../models/user-model';
 import manipulate from '../utils/query-manipulation';
 import json from '../utils/json';
-import { hashPassword } from '../utils/password-crypt';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { uploadImage } from '../lib/image-upload';
 
 export async function createUser(req: any, res: NextApiResponse) {
-  const { name, email, password: originalPassword } = req.body;
+  const { name, email, password } = req.body;
   const image = await uploadImage(req.file, 'user', 'png', [100, 100]);
-  const password = await hashPassword(originalPassword);
   const user = await User.create({ name, email, password, image });
   res.status(201).json(json({ user }));
 }

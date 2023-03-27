@@ -14,6 +14,11 @@ CategorySchema.pre('findOneAndUpdate', function (next) {
   next();
 });
 
+CategorySchema.pre(/^find/, function (next) {
+  this.select('-__v');
+  next();
+});
+
 CategorySchema.post(/^delete/, async function (doc) {
   await Product.updateMany(
     { categories: { $in: doc._id } },

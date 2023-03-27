@@ -4,9 +4,9 @@ export default function Home() {
 
 // DONE: (Reiterate): Image Uploads
 // DONE: Payment & Order
-// DOING: (Reiterate): Searching & Filtering & Sorting & Field Limiting & Pagination
+// DONE: (Reiterate): Searching & Filtering & Sorting & Field Limiting & Pagination
+// DONE: Error Handling
 // TODO: Refactoring
-// TODO: Error Handling
 // TODO: Image Update & Password Reset & Login
 // TODO: Auths & Protection
 // TODO: Structure lib/utils

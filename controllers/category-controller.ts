@@ -16,7 +16,11 @@ export async function readCategories(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const [categories, count] = await manipulate(Category.find(), req.query);
+  const [categories, count] = await manipulate(
+    Category.find(),
+    req.query,
+    'category'
+  );
   res.status(200).json(json({ categories, count }));
 }
 

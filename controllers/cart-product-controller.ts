@@ -19,7 +19,8 @@ export async function readCartProducts(
   const { id } = req.query;
   const [cartProducts, count] = await manipulate(
     CartProduct.find({ user: id }),
-    req.query
+    req.query,
+    'cartProduct'
   );
   res.status(200).json(json({ cartProducts, count }));
 }

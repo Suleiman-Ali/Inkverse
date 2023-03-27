@@ -21,6 +21,11 @@ const ReviewSchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
 });
 
+ReviewSchema.pre(/^find/, function (next) {
+  this.select('-__v');
+  next();
+});
+
 ReviewSchema.pre('findOneAndUpdate', function (next) {
   this.setOptions({ new: true, runValidators: true });
   next();

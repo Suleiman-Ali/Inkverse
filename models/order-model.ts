@@ -14,7 +14,11 @@ const OrderSchema = new mongoose.Schema({
     type: [
       {
         product: { type: mongoose.Types.ObjectId, ref: 'Product' },
-        quantity: { type: Number, default: 1 },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: [1, 'Quantity must be at least 1'],
+        },
       },
     ],
     required: [true, 'Products is required'],
@@ -32,7 +36,11 @@ const OrderSchema = new mongoose.Schema({
 });
 
 OrderSchema.pre(/^find/, function (next) {
-  this.populate('products', null, Product);
+  this.populate({
+    path: 'products',
+    populate: { path: 'product', model: Product },
+  });
+  this.select('-__v');
   next();
 });
 

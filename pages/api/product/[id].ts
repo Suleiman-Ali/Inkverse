@@ -16,6 +16,9 @@ const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({
 });
 apiRoute.use(dbConnectMiddleware);
 apiRoute.get(readProduct);
-apiRoute.patch(filterReqBody('images', 'createdAt'), updateProduct);
+apiRoute.patch(
+  filterReqBody('images', 'available', 'createdAt'),
+  updateProduct
+);
 apiRoute.delete(deleteProduct);
 export default apiRoute;

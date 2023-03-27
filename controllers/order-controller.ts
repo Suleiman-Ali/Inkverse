@@ -9,6 +9,7 @@ import {
   filterUnavailableCartProducts,
 } from '../utils/helper-functions';
 
+// import stripe from '../configs/stripe-config';
 // export async function createOrder(req: NextApiRequest, res: NextApiResponse) {
 //   const card = await stripe.paymentMethods.create({
 //     type: 'card',
@@ -38,16 +39,20 @@ export async function createOrder(req: NextApiRequest, res: NextApiResponse) {
     paymentId,
     amount,
   });
-  res.status(200).json(json({ order }));
+  res.status(201).json(json({ order }));
 }
 
 export async function readAllOrders(req: NextApiRequest, res: NextApiResponse) {
-  const [orders, count] = await manipulate(Order.find(), req.query);
+  const [orders, count] = await manipulate(Order.find(), req.query, 'order');
   res.status(200).json(json({ orders, count }));
 }
 
 export async function readOrders(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
-  const [orders, count] = await manipulate(Order.find({ user: id }), req.query);
+  const [orders, count] = await manipulate(
+    Order.find({ user: id }),
+    req.query,
+    'order'
+  );
   res.status(200).json(json({ orders, count }));
 }

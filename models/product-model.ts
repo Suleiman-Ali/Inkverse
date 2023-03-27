@@ -11,14 +11,14 @@ const ProductSchema = new mongoose.Schema({
     min: [1, 'Price must be at least 1$'],
     required: [true, 'Price is required'],
   },
+  categories: {
+    type: [{ type: mongoose.Types.ObjectId, ref: 'Category' }],
+    required: [true, 'Categories is required'],
+  },
   images: {
     type: [String],
     required: [true, 'Images is required'],
     validate: [_.negate(_.isEmpty), 'Product must have at least 1 image'],
-  },
-  categories: {
-    type: [{ type: mongoose.Types.ObjectId, ref: 'Category' }],
-    required: [true, 'Categories is required'],
   },
   available: { type: Boolean, default: true },
   createdAt: { type: Number, default: Date.now },
@@ -31,6 +31,7 @@ ProductSchema.pre('findOneAndUpdate', function (next) {
 
 ProductSchema.pre(/^find/, function (next) {
   this.populate('categories', null, Category);
+  this.select('-__v');
   next();
 });
 
