@@ -7,11 +7,8 @@ export function calcAmount(cartProducts: any[]) {
 }
 
 export function cartProductsToOrderProducts(cartProducts: any[]) {
-  return cartProducts.map(({ product, quantity }) => ({ product, quantity }));
-}
-
-export function filterUnavailableCartProducts(cartProducts: any[]) {
-  return cartProducts.filter(
-    (cartProduct) => cartProduct.product.available === true
-  );
+  return cartProducts.map(({ product, quantity }) => {
+    const { name, price, images } = product;
+    return { name, price, quantity, image: images[0] };
+  });
 }

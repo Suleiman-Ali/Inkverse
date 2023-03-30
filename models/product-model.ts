@@ -1,4 +1,6 @@
 import Category from './category-model';
+import CartProduct from './cart-product-model';
+import Review from './review-model';
 import mongoose from 'mongoose';
 import _ from 'lodash';
 
@@ -20,12 +22,18 @@ const ProductSchema = new mongoose.Schema({
     required: [true, 'Images is required'],
     validate: [_.negate(_.isEmpty), 'Product must have at least 1 image'],
   },
-  available: { type: Boolean, default: true },
   createdAt: { type: Number, default: Date.now },
 });
 
 ProductSchema.pre('findOneAndUpdate', function (next) {
   this.setOptions({ new: true, runValidators: true });
+  next();
+});
+
+ProductSchema.post('findOneAndDelete', async function (doc, next) {
+  const { _id: product } = doc;
+  const cartProducts = await CartProduct.deleteMany({ product });
+  const reviews = await Review.deleteMany({ product });
   next();
 });
 

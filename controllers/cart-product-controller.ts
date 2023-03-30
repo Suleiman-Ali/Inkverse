@@ -12,13 +12,10 @@ export async function createCartProduct(
   res.status(201).json(json({ cartProduct }));
 }
 
-export async function readCartProducts(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { id } = req.query;
+export async function readUserCartProducts(req: any, res: NextApiResponse) {
+  const { id: user } = req.user;
   const [cartProducts, count] = await manipulate(
-    CartProduct.find({ user: id }),
+    CartProduct.find({ user }),
     req.query,
     'cartProduct'
   );

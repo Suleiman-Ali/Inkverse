@@ -2,7 +2,22 @@ import json from '../utils/json';
 import capitalize from 'lodash/capitalize';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const handleInvalidFileError = (err: any, res: NextApiResponse) => {
+const handleAuthenticationError = (err: any, res: NextApiResponse) => {
+  const { message } = err;
+  res.status(403).json(json(message));
+};
+
+const handleAuthorizationError = (err: any, res: NextApiResponse) => {
+  const { message } = err;
+  res.status(401).json(json(message));
+};
+
+const handleResourceNotFoundError = (err: any, res: NextApiResponse) => {
+  const { message } = err;
+  res.status(404).json(json(message));
+};
+
+const handleInvalidFileTypeError = (err: any, res: NextApiResponse) => {
   const { message } = err;
   res.status(400).json(json(message));
 };
@@ -31,7 +46,14 @@ export default function globalErrorHandler(
   res: NextApiResponse
 ) {
   const error = JSON.stringify(err);
-  if (error.includes('storageErrors')) return handleInvalidFileError(err, res);
+  if (error.includes('AuthenticationError'))
+    return handleAuthenticationError(err, res);
+  if (error.includes('AuthorizationError'))
+    return handleAuthorizationError(err, res);
+  if (error.includes('ResourceNotFoundError'))
+    return handleResourceNotFoundError(err, res);
+  if (error.includes('InvalidFileTypeError'))
+    return handleInvalidFileTypeError(err, res);
   if (error.includes('11000')) return handleDuplicateKeyError(err, res);
   if (error.includes('CastError')) return handleCastError(err, res);
   if (error.includes('ValidatorError')) return handleValidationError(err, res);

@@ -1,15 +1,15 @@
 import stripe from '../configs/stripe-config';
-import { calcAmount } from '../utils/helper-functions';
 
 export default async function createPayment(
-  cartProducts: any[],
-  paymentMethodId: string
+  payment_method: string,
+  amount: number
 ) {
-  const { id: paymentId, amount } = await stripe.paymentIntents.create({
-    amount: calcAmount(cartProducts) * 100,
-    payment_method: paymentMethodId,
-    currency: 'usd',
-    confirm: true,
-  });
-  return { paymentId, amount: amount / 100 };
+  const { id: paymentId, amount: fullAmount } =
+    await stripe.paymentIntents.create({
+      payment_method,
+      amount: amount * 100,
+      currency: 'usd',
+      confirm: true,
+    });
+  return { paymentId, amount: fullAmount / 100 };
 }

@@ -36,10 +36,7 @@ export async function uploadImage(
         unique_filename: false,
         overwrite: true,
       },
-      (err: any, res: any) => {
-        if (err) reject(err);
-        else resolve(res.url);
-      }
+      (err: any, res: any) => (err ? reject(err) : resolve(res.url))
     );
     streamifier.createReadStream(buffer).pipe(uploadStream);
   });

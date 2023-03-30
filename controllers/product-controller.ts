@@ -18,7 +18,10 @@ export async function createProduct(req: any, res: NextApiResponse) {
   res.status(201).json(json({ product }));
 }
 
-export async function readProducts(req: NextApiRequest, res: NextApiResponse) {
+export async function readAllProducts(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const [products, count] = await manipulate(
     Product.find(),
     req.query,
@@ -41,6 +44,6 @@ export async function updateProduct(req: NextApiRequest, res: NextApiResponse) {
 
 export async function deleteProduct(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
-  const product = await Product.findByIdAndUpdate(id, { available: false });
+  const product = await Product.findByIdAndDelete(id);
   res.status(200).json(json({}));
 }

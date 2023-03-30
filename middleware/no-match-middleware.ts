@@ -5,5 +5,5 @@ export default function globalNoMatchHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  res.status(404).json(json('Could not find requested route'));
+  res.status(404).json(json('Resource does not exist'));
 }

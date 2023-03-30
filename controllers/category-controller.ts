@@ -12,7 +12,7 @@ export async function createCategory(
   res.status(201).json(json({ category }));
 }
 
-export async function readCategories(
+export async function readAllCategories(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

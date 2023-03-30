@@ -1,8 +1,6 @@
-import Product from './product-model';
 import mongoose from 'mongoose';
-import CartProduct from './cart-product-model';
 import _ from 'lodash';
-import { filterUnavailableCartProducts } from '../utils/helper-functions';
+import CartProduct from './cart-product-model';
 
 const OrderSchema = new mongoose.Schema({
   user: {
@@ -13,7 +11,13 @@ const OrderSchema = new mongoose.Schema({
   products: {
     type: [
       {
-        product: { type: mongoose.Types.ObjectId, ref: 'Product' },
+        name: { type: String, required: [true, 'Name is required'] },
+        image: { type: String, required: [true, 'Image is required'] },
+        price: {
+          type: Number,
+          min: [1, 'Price must be at least 1$'],
+          required: [true, 'Price is required'],
+        },
         quantity: {
           type: Number,
           default: 1,
@@ -35,22 +39,15 @@ const OrderSchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
 });
 
-OrderSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'products',
-    populate: { path: 'product', model: Product },
-  });
-  this.select('-__v');
+OrderSchema.post('save', async function (doc, next) {
+  const { user } = doc;
+  const cartProducts = await CartProduct.deleteMany({ user });
   next();
 });
 
-OrderSchema.post(/^save/, async function (doc) {
-  const cartProducts = await CartProduct.find({ user: doc.user });
-  const cartProductIds = filterUnavailableCartProducts(cartProducts).map(
-    (cartProduct) => cartProduct._id
-  );
-  if (cartProductIds.length > 0)
-    await CartProduct.deleteMany({ _id: { $in: cartProductIds } });
+OrderSchema.pre(/^find/, function (next) {
+  this.select('-__v');
+  next();
 });
 
 const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);

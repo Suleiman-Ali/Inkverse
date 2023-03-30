@@ -11,13 +11,13 @@ export async function createUser(req: any, res: NextApiResponse) {
   res.status(201).json(json({ user }));
 }
 
-export async function readUsers(req: NextApiRequest, res: NextApiResponse) {
+export async function readAllUsers(req: NextApiRequest, res: NextApiResponse) {
   const [users, count] = await manipulate(User.find(), req.query, 'user');
   res.status(200).json(json({ users, count }));
 }
 
-export async function readUser(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+export async function readUser(req: any, res: NextApiResponse) {
+  const { id } = req.user;
   const user = await User.findById(id);
   res.status(200).json(json({ user }));
 }

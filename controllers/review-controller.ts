@@ -9,10 +9,13 @@ export async function createReview(req: NextApiRequest, res: NextApiResponse) {
   res.status(201).json(json({ review }));
 }
 
-export async function readReviews(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+export async function readProductReviews(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { id: product } = req.query;
   const [reviews, count] = await manipulate(
-    Review.find({ product: id }),
+    Review.find({ product }),
     req.query,
     'review'
   );

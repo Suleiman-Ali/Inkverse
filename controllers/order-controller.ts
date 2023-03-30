@@ -5,13 +5,14 @@ import json from '../utils/json';
 import manipulate from '../utils/query-manipulation';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
+  calcAmount,
   cartProductsToOrderProducts,
-  filterUnavailableCartProducts,
 } from '../utils/helper-functions';
 
 // import stripe from '../configs/stripe-config';
-// export async function createOrder(req: NextApiRequest, res: NextApiResponse) {
-//   const card = await stripe.paymentMethods.create({
+
+// const getPaymentId = async () => {
+//   const { id } = await stripe.paymentMethods.create({
 //     type: 'card',
 //     card: {
 //       number: '4242424242424242',
@@ -20,24 +21,24 @@ import {
 //       cvc: '424',
 //     },
 //   });
-//   res.send(card.id);
-// }
+//   return id;
+// };
 
-export async function createOrder(req: NextApiRequest, res: NextApiResponse) {
-  const { userId, paymentMethodId } = req.body;
-  let cartProducts = await CartProduct.find({ user: userId });
-  cartProducts = filterUnavailableCartProducts(cartProducts);
+export async function createOrder(req: any, res: NextApiResponse) {
+  const { paymentMethodId } = req.body;
+  const { id: user } = req.user;
+  const cartProducts = await CartProduct.find({ user });
 
   const { paymentId, amount } = await createPayment(
-    cartProducts,
-    paymentMethodId
+    paymentMethodId,
+    calcAmount(cartProducts)
   );
 
   const order = await Order.create({
-    user: cartProducts[0].user,
-    products: cartProductsToOrderProducts(cartProducts),
+    user,
     paymentId,
     amount,
+    products: cartProductsToOrderProducts(cartProducts),
   });
   res.status(201).json(json({ order }));
 }
@@ -47,10 +48,10 @@ export async function readAllOrders(req: NextApiRequest, res: NextApiResponse) {
   res.status(200).json(json({ orders, count }));
 }
 
-export async function readOrders(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+export async function readUserOrders(req: any, res: NextApiResponse) {
+  const { id: user } = req.user;
   const [orders, count] = await manipulate(
-    Order.find({ user: id }),
+    Order.find({ user }),
     req.query,
     'order'
   );
