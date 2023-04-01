@@ -1,8 +1,10 @@
-import mongoose from 'mongoose';
 import validator from 'validator';
+import runValidators from './hooks/run-validators';
+import deselectVProperty from './hooks/deselect-v-property';
+import { Schema, models, model } from 'mongoose';
 import { hashPassword } from '../utils/password-crypt';
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   name: {
     type: String,
     unique: [true, 'Name must be unique'],
@@ -28,21 +30,13 @@ const UserSchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
 });
 
+runValidators(UserSchema);
+deselectVProperty(UserSchema);
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await hashPassword(this.password);
   next();
 });
 
-UserSchema.pre(/^find/, function (next) {
-  this.select('-__v');
-  next();
-});
-
-UserSchema.pre('findOneAndUpdate', function (next) {
-  this.setOptions({ new: true, runValidators: true });
-  next();
-});
-
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+const User = models.User || model('User', UserSchema);
 export default User;

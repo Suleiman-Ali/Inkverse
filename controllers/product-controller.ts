@@ -2,7 +2,7 @@ import Product from '../models/product-model';
 import manipulate from '../utils/query-manipulation';
 import json from '../utils/json';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { uploadImages } from '../lib/image-upload';
+import { uploadImages } from '../lib/upload-image';
 
 export async function createProduct(req: any, res: NextApiResponse) {
   const { name, authorName, description, price, categories } = req.body;

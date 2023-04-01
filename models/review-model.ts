@@ -1,13 +1,15 @@
-import mongoose from 'mongoose';
+import runValidators from './hooks/run-validators';
+import deselectVProperty from './hooks/deselect-v-property';
+import { Schema, models, model, Types } from 'mongoose';
 
-const ReviewSchema = new mongoose.Schema({
+const ReviewSchema = new Schema({
   user: {
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'User',
     required: [true, 'User is required'],
   },
   product: {
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'Product',
     required: [true, 'Product is required'],
   },
@@ -21,15 +23,8 @@ const ReviewSchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
 });
 
-ReviewSchema.pre(/^find/, function (next) {
-  this.select('-__v');
-  next();
-});
+runValidators(ReviewSchema);
+deselectVProperty(ReviewSchema);
 
-ReviewSchema.pre('findOneAndUpdate', function (next) {
-  this.setOptions({ new: true, runValidators: true });
-  next();
-});
-
-const Review = mongoose.models.Review || mongoose.model('Review', ReviewSchema);
+const Review = models.Review || model('Review', ReviewSchema);
 export default Review;

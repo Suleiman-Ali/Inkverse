@@ -1,10 +1,13 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
 import CartProduct from './cart-product-model';
+import runValidators from './hooks/run-validators';
+import deselectVProperty from './hooks/deselect-v-property';
+import negate from 'lodash/negate';
+import isEmpty from 'lodash/isEmpty';
+import { Schema, models, model, Types } from 'mongoose';
 
-const OrderSchema = new mongoose.Schema({
+const OrderSchema = new Schema({
   user: {
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'User',
     required: [true, 'User is required'],
   },
@@ -26,7 +29,7 @@ const OrderSchema = new mongoose.Schema({
       },
     ],
     required: [true, 'Products is required'],
-    validate: [_.negate(_.isEmpty), 'Order must have at least 1 product'],
+    validate: [negate(isEmpty), 'Order must have at least 1 product'],
   },
   paymentId: {
     type: String,
@@ -39,16 +42,13 @@ const OrderSchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
 });
 
+runValidators(OrderSchema);
+deselectVProperty(OrderSchema);
 OrderSchema.post('save', async function (doc, next) {
   const { user } = doc;
-  const cartProducts = await CartProduct.deleteMany({ user });
+  await CartProduct.deleteMany({ user });
   next();
 });
 
-OrderSchema.pre(/^find/, function (next) {
-  this.select('-__v');
-  next();
-});
-
-const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
+const Order = models.Order || model('Order', OrderSchema);
 export default Order;

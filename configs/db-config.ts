@@ -1,8 +1,9 @@
-import mongoose from 'mongoose';
+import { connect } from 'mongoose';
 
+const log = (message: string) => () => console.log(message);
+const uri = process.env.DB_URI as string;
 export default async function dbConnect() {
-  return mongoose
-    .connect(process.env.DB_URI as string)
-    .then(() => console.log('DB connection was successful'))
-    .catch(() => console.log('DB connection failed'));
+  return connect(uri)
+    .then(log('DB connection successful'))
+    .catch(log('DB connection failed'));
 }

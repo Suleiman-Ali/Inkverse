@@ -2,7 +2,7 @@ import User from '../models/user-model';
 import manipulate from '../utils/query-manipulation';
 import json from '../utils/json';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { uploadImage } from '../lib/image-upload';
+import { uploadImage } from '../lib/upload-image';
 
 export async function createUser(req: any, res: NextApiResponse) {
   const { name, email, password } = req.body;

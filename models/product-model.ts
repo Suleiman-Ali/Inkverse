@@ -1,10 +1,14 @@
 import Category from './category-model';
 import CartProduct from './cart-product-model';
 import Review from './review-model';
-import mongoose from 'mongoose';
-import _ from 'lodash';
+import runValidators from './hooks/run-validators';
+import deselectVProperty from './hooks/deselect-v-property';
+import populateProperty from './hooks/populate-property';
+import negate from 'lodash/negate';
+import isEmpty from 'lodash/isEmpty';
+import { Schema, models, model, Types } from 'mongoose';
 
-const ProductSchema = new mongoose.Schema({
+const ProductSchema = new Schema({
   name: { type: String, required: [true, 'Name is required'] },
   authorName: { type: String, required: [true, 'AuthorName is required'] },
   description: { type: String, required: [true, 'Description is required'] },
@@ -14,35 +18,26 @@ const ProductSchema = new mongoose.Schema({
     required: [true, 'Price is required'],
   },
   categories: {
-    type: [{ type: mongoose.Types.ObjectId, ref: 'Category' }],
+    type: [{ type: Types.ObjectId, ref: 'Category' }],
     required: [true, 'Categories is required'],
   },
   images: {
     type: [String],
     required: [true, 'Images is required'],
-    validate: [_.negate(_.isEmpty), 'Product must have at least 1 image'],
+    validate: [negate(isEmpty), 'Product must have at least 1 image'],
   },
   createdAt: { type: Number, default: Date.now },
 });
 
-ProductSchema.pre('findOneAndUpdate', function (next) {
-  this.setOptions({ new: true, runValidators: true });
-  next();
-});
-
+runValidators(ProductSchema);
+deselectVProperty(ProductSchema);
+populateProperty(ProductSchema, 'categories', Category);
 ProductSchema.post('findOneAndDelete', async function (doc, next) {
   const { _id: product } = doc;
-  const cartProducts = await CartProduct.deleteMany({ product });
-  const reviews = await Review.deleteMany({ product });
+  await CartProduct.deleteMany({ product });
+  await Review.deleteMany({ product });
   next();
 });
 
-ProductSchema.pre(/^find/, function (next) {
-  this.populate('categories', null, Category);
-  this.select('-__v');
-  next();
-});
-
-const Product =
-  mongoose.models.Product || mongoose.model('Product', ProductSchema);
+const Product = models.Product || model('Product', ProductSchema);
 export default Product;

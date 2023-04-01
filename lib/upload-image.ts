@@ -1,6 +1,6 @@
 import sharp from 'sharp';
-import streamifier from 'streamifier';
 import cloudinary from '../configs/cloudinary-config';
+import { createReadStream } from 'streamifier';
 
 function constructImageName(originalname: string, folder: string) {
   const name = `${folder}-${originalname.split('.')[0].trim().toLowerCase()}`;
@@ -38,7 +38,7 @@ export async function uploadImage(
       },
       (err: any, res: any) => (err ? reject(err) : resolve(res.url))
     );
-    streamifier.createReadStream(buffer).pipe(uploadStream);
+    createReadStream(buffer).pipe(uploadStream);
   });
 }
 

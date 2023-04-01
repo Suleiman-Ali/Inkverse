@@ -1,7 +1,9 @@
-import mongoose from 'mongoose';
 import Product from './product-model';
+import runValidators from './hooks/run-validators';
+import deselectVProperty from './hooks/deselect-v-property';
+import { Schema, models, model } from 'mongoose';
 
-const CategorySchema = new mongoose.Schema({
+const CategorySchema = new Schema({
   name: {
     type: String,
     required: [true, 'Name is required'],
@@ -9,23 +11,14 @@ const CategorySchema = new mongoose.Schema({
   },
 });
 
-CategorySchema.pre('findOneAndUpdate', function (next) {
-  this.setOptions({ new: true, runValidators: true });
-  next();
-});
-
-CategorySchema.pre(/^find/, function (next) {
-  this.select('-__v');
-  next();
-});
-
-CategorySchema.post(/^delete/, async function (doc) {
+runValidators(CategorySchema);
+deselectVProperty(CategorySchema);
+CategorySchema.post('findOneAndDelete', async function (doc) {
   await Product.updateMany(
     { categories: { $in: doc._id } },
     { $pull: { categories: doc._id } }
   );
 });
 
-const Category =
-  mongoose.models.Category || mongoose.model('Category', CategorySchema);
+const Category = models.Category || model('Category', CategorySchema);
 export default Category;

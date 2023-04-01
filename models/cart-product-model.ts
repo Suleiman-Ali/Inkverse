@@ -1,14 +1,17 @@
 import Product from './product-model';
-import mongoose from 'mongoose';
+import runValidators from './hooks/run-validators';
+import deselectVProperty from './hooks/deselect-v-property';
+import populateProperty from './hooks/populate-property';
+import { Schema, models, model, Types } from 'mongoose';
 
-const CartProductSchema = new mongoose.Schema({
+const CartProductSchema = new Schema({
   user: {
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'User',
     required: [true, 'User is required'],
   },
   product: {
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'Product',
     required: [true, 'Product is required'],
   },
@@ -19,18 +22,11 @@ const CartProductSchema = new mongoose.Schema({
   },
 });
 
-CartProductSchema.pre('findOneAndUpdate', function (next) {
-  this.setOptions({ new: true, runValidators: true });
-  next();
-});
-
-CartProductSchema.pre(/^find/, function (next) {
-  this.populate('product', null, Product);
-  this.select('-__v');
-  next();
-});
+runValidators(CartProductSchema);
+deselectVProperty(CartProductSchema);
+populateProperty(CartProductSchema, 'product', Product);
 
 const CartProduct =
-  mongoose.models.CartProduct ||
-  mongoose.model('CartProduct', CartProductSchema);
+  models.CartProduct || model('CartProduct', CartProductSchema);
+
 export default CartProduct;

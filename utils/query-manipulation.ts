@@ -29,7 +29,7 @@ function paginateQuery(page: number, limit: number, query: Query<any, any>) {
 export default async function manipulate(
   inputQuery: Query<any, any>,
   queryObj: any,
-  type?: string
+  type: 'product' | 'user' | 'review' | 'cartProduct' | 'order' | 'category'
 ) {
   const { sort, fields, page, limit } = queryObj;
   let query = inputQuery;
