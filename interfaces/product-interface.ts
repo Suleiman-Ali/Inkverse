@@ -6,6 +6,7 @@ interface IProduct {
   price: number;
   categories: string[];
   images: string[];
+  tag: 'none' | 'popular' | 'recommended';
   createdAt: number;
 }
 

@@ -8,6 +8,7 @@ type TProduct = {
   price: number;
   categories: TCategory[];
   images: string[];
+  tag: 'none' | 'popular' | 'recommended';
   createdAt: number;
 };
 

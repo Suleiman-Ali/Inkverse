@@ -37,10 +37,11 @@ export default async function manipulate(
   let filter: any = {};
 
   if (type === 'product') {
-    const { name, category, minPrice, maxPrice } = queryObj;
+    const { name, category, minPrice, maxPrice, tag } = queryObj;
     if (name) filter.name = new RegExp(name, 'i');
     if (category) filter.categories = { $in: category };
     if (minPrice && maxPrice) filter.price = { $gte: minPrice, $lte: maxPrice };
+    if (tag) filter.tag = { $eq: tag };
   } else if (type === 'user') {
     const { name, email, role, active } = queryObj;
     if (name) filter.name = new RegExp(name, 'i');

@@ -3,7 +3,6 @@ import CartProduct from './cart-product-model';
 import Review from './review-model';
 import runValidators from './hooks/run-validators';
 import deselectVProperty from './hooks/deselect-v-property';
-import populateProperty from './hooks/populate-property';
 import negate from 'lodash/negate';
 import isEmpty from 'lodash/isEmpty';
 import { Schema, models, model, Types } from 'mongoose';
@@ -26,16 +25,28 @@ const ProductSchema = new Schema({
     required: [true, 'Images is required'],
     validate: [negate(isEmpty), 'Product must have at least 1 image'],
   },
+  tag: {
+    type: String,
+    default: 'none',
+    enum: ['none', 'popular', 'recommended'],
+  },
   createdAt: { type: Number, default: Date.now },
 });
 
 runValidators(ProductSchema);
 deselectVProperty(ProductSchema);
-populateProperty(ProductSchema, 'categories', Category);
+ProductSchema.pre(/^find/, function (next) {
+  const included = Object.keys((this as any)._fields).includes('categories');
+  if (!included) return next();
+  this.populate('categories', null, Category);
+  next();
+});
 ProductSchema.post('findOneAndDelete', async function (doc, next) {
   const { _id: product } = doc;
-  await CartProduct.deleteMany({ product });
-  await Review.deleteMany({ product });
+  await Promise.all([
+    CartProduct.deleteMany({ product }),
+    Review.deleteMany({ product }),
+  ]);
   next();
 });
 

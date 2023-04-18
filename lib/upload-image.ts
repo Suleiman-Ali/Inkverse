@@ -28,7 +28,7 @@ export async function uploadImage(
   const name = constructImageName(file.originalname, folder);
   const buffer = await resizeImage(file.buffer, format, size);
   return new Promise<{ url: string }>((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
+    const uploadStream = cloudinary.upload_stream(
       {
         folder,
         public_id: name,

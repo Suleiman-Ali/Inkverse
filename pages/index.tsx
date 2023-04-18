@@ -1,35 +1,48 @@
-import { getSession, signIn } from 'next-auth/react';
+import HomePageTemplate from '../components/templates/home-page-template';
+import dbConnect from '../configs/db-config';
+import TProduct from '../types/product-type';
+import TCategoryWithProducts from '../types/category-with-products-type';
+import { fetchTaggedCategories, fetchTaggedProducts } from '../utils/fetchers';
 
-export async function getServerSideProps(context: any) {
-  const session = await getSession({ req: context.req });
-  return { props: { session } };
-}
-
-export default function Home({ session }: any) {
-  const login = async () => {
-    const data = await signIn('credentials', {
-      redirect: false,
-      email: 'user@gmail.com',
-      password: '71747478',
-    });
+export async function getServerSideProps() {
+  await dbConnect();
+  const popularProducts = await fetchTaggedProducts('popular');
+  const recommendedProducts = await fetchTaggedProducts('recommended');
+  const popularCategories = await fetchTaggedCategories('popular');
+  const recommendedCategories = await fetchTaggedCategories('recommended');
+  return {
+    props: {
+      popularProducts,
+      recommendedProducts,
+      popularCategories,
+      recommendedCategories,
+    },
   };
-
-  return (
-    <div>
-      {session ? (
-        JSON.stringify(session)
-      ) : (
-        <button onClick={login}>Login</button>
-      )}
-    </div>
-  );
 }
 
+interface HomePageProps {
+  popularProducts: TProduct[];
+  recommendedProducts: TProduct[];
+  popularCategories: TCategoryWithProducts[];
+  recommendedCategories: TCategoryWithProducts[];
+}
+
+export default function HomePage(props: HomePageProps) {
+  return <HomePageTemplate {...props} />;
+}
+
+//// NOTE: Backend
 // DONE: Image Uploads
 // DONE: Payment & Order
 // DONE: Searching & Filtering & Sorting & Field Limiting & Pagination
 // DONE: Error Handling
 // DONE: Login & Auths & Protection
-// TODO: Refactor
-// TODO: Structure / Choose Architecture for components
 // TODO: (Later) Generate Image & Image Remove & Images Update & Password Reset
+
+//// NOTE: Frontend
+// DOING: HomePage
+// TODO: ProductsPage
+// TODO: ProductPage
+
+// NOTE: Both
+// TODO: Refactor

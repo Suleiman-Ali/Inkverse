@@ -9,6 +9,12 @@ const CategorySchema = new Schema({
     required: [true, 'Name is required'],
     unique: [true, 'Name must be unique'],
   },
+  sub: { type: String, required: [true, 'Description is required'] },
+  tag: {
+    type: String,
+    default: 'none',
+    enum: ['none', 'popular', 'recommended'],
+  },
 });
 
 runValidators(CategorySchema);

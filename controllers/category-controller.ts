@@ -7,8 +7,8 @@ export async function createCategory(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { name } = req.body;
-  const category = await Category.create({ name });
+  const { name, sub, tag } = req.body;
+  const category = await Category.create({ name, sub, tag });
   res.status(201).json(json({ category }));
 }
 

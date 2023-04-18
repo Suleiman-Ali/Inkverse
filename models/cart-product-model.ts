@@ -1,7 +1,6 @@
 import Product from './product-model';
 import runValidators from './hooks/run-validators';
 import deselectVProperty from './hooks/deselect-v-property';
-import populateProperty from './hooks/populate-property';
 import { Schema, models, model, Types } from 'mongoose';
 
 const CartProductSchema = new Schema({
@@ -24,7 +23,12 @@ const CartProductSchema = new Schema({
 
 runValidators(CartProductSchema);
 deselectVProperty(CartProductSchema);
-populateProperty(CartProductSchema, 'product', Product);
+CartProductSchema.pre(/^find/, function (next) {
+  const included = Object.keys((this as any)._fields).includes('product');
+  if (!included) return next();
+  this.populate('product', null, Product);
+  next();
+});
 
 const CartProduct =
   models.CartProduct || model('CartProduct', CartProductSchema);
