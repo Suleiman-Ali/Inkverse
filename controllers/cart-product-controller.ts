@@ -3,11 +3,9 @@ import manipulate from '../utils/query-manipulation';
 import json from '../utils/json';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export async function createCartProduct(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { user, product, quantity } = req.body;
+export async function createCartProduct(req: any, res: NextApiResponse) {
+  const { id: user } = req.user;
+  const { product, quantity } = req.body;
   const cartProduct = await CartProduct.create({ user, product, quantity });
   res.status(201).json(json({ cartProduct }));
 }

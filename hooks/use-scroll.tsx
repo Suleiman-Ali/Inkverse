@@ -7,5 +7,5 @@ export default function useScroll() {
     window.addEventListener('scroll', handler);
     return () => window.removeEventListener('scroll', handler);
   }, []);
-  return topOffset;
+  return { topOffset };
 }

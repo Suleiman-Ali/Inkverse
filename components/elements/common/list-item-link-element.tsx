@@ -7,8 +7,8 @@ interface ListItemLinkProps {
 }
 
 export default function ListItemLink({ href, children }: ListItemLinkProps) {
-  const { asPath: route } = useRouter();
-  const activeClass = route === href ? 'font-medium' : '';
+  const { pathname: route } = useRouter();
+  const activeClass = route === href ? 'font-semibold' : '';
   const loginClass = href === '/sign-in' ? 'flex items-center gap-1' : '';
 
   return (

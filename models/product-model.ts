@@ -30,6 +30,10 @@ const ProductSchema = new Schema({
     default: 'none',
     enum: ['none', 'popular', 'recommended'],
   },
+  publicationDate: {
+    type: String,
+    required: [true, 'PublicationDate is required'],
+  },
   createdAt: { type: Number, default: Date.now },
 });
 

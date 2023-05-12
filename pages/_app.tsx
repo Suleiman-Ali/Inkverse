@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import { SessionProvider } from 'next-auth/react';
-import { Roboto } from '@next/font/google';
+import { Poppins } from '@next/font/google';
 import type { AppProps } from 'next/app';
 import '/public/global.css';
 
-const font = Roboto({
+const font = Poppins({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500'],
+  weight: ['400', '500', '600', '700', '800'],
   preload: true,
 });
 

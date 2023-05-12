@@ -11,7 +11,7 @@ function countQuery(query: Query<any, any>) {
 
 function sortQuery(sort: string, query: Query<any, any>) {
   if (!sort) return query;
-  return query.sort(sort);
+  return query.sort(sort.split(',').join(' '));
 }
 
 function fieldLimitQuery(fields: string, query: Query<any, any>) {
@@ -26,21 +26,23 @@ function paginateQuery(page: number, limit: number, query: Query<any, any>) {
   return query.skip(skip).limit(limitCalc);
 }
 
-export default async function manipulate(
+export default async function manipulate<T = any[]>(
   inputQuery: Query<any, any>,
   queryObj: any,
   type: 'product' | 'user' | 'review' | 'cartProduct' | 'order' | 'category'
 ) {
   const { sort, fields, page, limit } = queryObj;
-  let query = inputQuery;
+  let query: any = inputQuery;
   let count: any;
   let filter: any = {};
 
   if (type === 'product') {
-    const { name, category, minPrice, maxPrice, tag } = queryObj;
+    // NOTE: By date?
+    const { name, category, price, tag } = queryObj;
     if (name) filter.name = new RegExp(name, 'i');
     if (category) filter.categories = { $in: category };
-    if (minPrice && maxPrice) filter.price = { $gte: minPrice, $lte: maxPrice };
+    if (price)
+      filter.price = { $gte: price.split(',')[0], $lte: price.split(',')[1] };
     if (tag) filter.tag = { $eq: tag };
   } else if (type === 'user') {
     const { name, email, role, active } = queryObj;
@@ -66,5 +68,7 @@ export default async function manipulate(
   query = sortQuery(sort, query);
   query = fieldLimitQuery(fields, query);
   query = paginateQuery(page, limit, query);
-  return [await query, await count];
+
+  const result: [T, number] = [await query, await count];
+  return result;
 }

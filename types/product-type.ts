@@ -6,6 +6,7 @@ type TProduct = {
   authorName: string;
   description: string;
   price: number;
+  publicationDate: string;
   categories: TCategory[];
   images: string[];
   tag: 'none' | 'popular' | 'recommended';

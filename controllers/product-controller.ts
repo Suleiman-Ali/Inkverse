@@ -5,7 +5,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { uploadImages } from '../lib/upload-image';
 
 export async function createProduct(req: any, res: NextApiResponse) {
-  const { name, authorName, description, price, categories, tag } = req.body;
+  const {
+    name,
+    authorName,
+    description,
+    price,
+    categories,
+    publicationDate,
+    tag,
+  } = req.body;
   const images = await uploadImages(req.files, 'product', 'jpeg', [325, 475]);
   const product = await Product.create({
     name,
@@ -14,6 +22,7 @@ export async function createProduct(req: any, res: NextApiResponse) {
     price,
     images,
     categories,
+    publicationDate,
     tag,
   });
   res.status(201).json(json({ product }));

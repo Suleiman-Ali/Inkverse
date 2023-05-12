@@ -24,6 +24,11 @@ import {
 //   return id;
 // };
 
+export async function readAllOrders(req: NextApiRequest, res: NextApiResponse) {
+  const [orders, count] = await manipulate(Order.find(), req.query, 'order');
+  res.status(200).json(json({ orders, count }));
+}
+
 export async function createOrder(req: any, res: NextApiResponse) {
   const { paymentMethodId } = req.body;
   const { id: user } = req.user;
@@ -41,11 +46,6 @@ export async function createOrder(req: any, res: NextApiResponse) {
     products: cartProductsToOrderProducts(cartProducts),
   });
   res.status(201).json(json({ order }));
-}
-
-export async function readAllOrders(req: NextApiRequest, res: NextApiResponse) {
-  const [orders, count] = await manipulate(Order.find(), req.query, 'order');
-  res.status(200).json(json({ orders, count }));
 }
 
 export async function readUserOrders(req: any, res: NextApiResponse) {

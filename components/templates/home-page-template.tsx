@@ -1,8 +1,9 @@
-import NavbarModule from '../modules/navbar-module';
-import HeaderModule from '../modules/header-module';
-import CategoryRowModule from '../modules/category-row-module';
-import ProductRowModule from '../modules/product-row-module';
-import FooterModule from '../modules/footer-module';
+import WrapperElement from '../elements/common/wrapper-element';
+import NavbarModule from '../modules/common/navbar-module';
+import HeaderModule from '../modules/home-page-modules/header-module';
+import CategoryRowModule from '../modules/home-page-modules/category-row-module';
+import ProductRowModule from '../modules/home-page-modules/product-row-module';
+import FooterModule from '../modules/common/footer-module';
 import TCategoryWithProducts from '../../types/category-with-products-type';
 import TProduct from '../../types/product-type';
 
@@ -20,7 +21,7 @@ export default function HomePageTemplate({
   recommendedCategories,
 }: HomePageTemplateProps) {
   return (
-    <div className="w-full flex flex-col gap-10">
+    <WrapperElement className="flex flex-col gap-10">
       <NavbarModule />
       <HeaderModule />
       <CategoryRowModule
@@ -37,6 +38,6 @@ export default function HomePageTemplate({
       />
       <ProductRowModule products={popularProducts} text="Popular Books" />
       <FooterModule />
-    </div>
+    </WrapperElement>
   );
 }

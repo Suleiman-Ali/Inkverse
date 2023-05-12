@@ -3,8 +3,9 @@ import manipulate from '../utils/query-manipulation';
 import json from '../utils/json';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export async function createReview(req: NextApiRequest, res: NextApiResponse) {
-  const { text, user, product, rate } = req.body;
+export async function createReview(req: any, res: NextApiResponse) {
+  const { id: user } = req.user;
+  const { text, product, rate } = req.body;
   const review = await Review.create({ user, product, text, rate });
   res.status(201).json(json({ review }));
 }

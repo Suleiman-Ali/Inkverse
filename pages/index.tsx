@@ -41,8 +41,10 @@ export default function HomePage(props: HomePageProps) {
 
 //// NOTE: Frontend
 // DOING: HomePage
-// TODO: ProductsPage
+// DOING: ProductsPage
 // TODO: ProductPage
 
-// NOTE: Both
+// NOTE: All
 // TODO: Refactor
+// TODO: Improve performance
+// TODO: Ensure styles and animation

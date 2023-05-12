@@ -4,6 +4,7 @@ interface IProduct {
   authorName: string;
   description: string;
   price: number;
+  publicationDate: string;
   categories: string[];
   images: string[];
   tag: 'none' | 'popular' | 'recommended';
