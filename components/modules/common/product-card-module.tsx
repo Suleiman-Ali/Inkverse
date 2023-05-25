@@ -1,7 +1,7 @@
 import WrapperElement from '../../elements/common/wrapper-element';
+import TProduct from '../../../types/standard-types/product-type';
 import Link from 'next/link';
 import Image from 'next/image';
-import TProduct from '../../../types/product-type';
 
 interface ProductCardModuleProps {
   product: TProduct;

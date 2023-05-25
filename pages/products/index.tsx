@@ -1,10 +1,10 @@
 import ProductsPageTemplate from '../../components/templates/products-page-template';
 import dbConnect from '../../configs/db-config';
-import TCategory from '../../types/category-type';
-import TProduct from '../../types/product-type';
-import TProductsQuery from '../../types/products-query-type';
-import { fetchAllCategories } from '../../utils/fetchers';
-import { fetchAllProducts } from '../../utils/fetchers';
+import TCategory from '../../types/standard-types/category-type';
+import TProduct from '../../types/standard-types/product-type';
+import TProductsQuery from '../../types/query-types/products-query-type';
+import fetchAllCategories from '../../utils/fetchers/fetch-all-categories';
+import fetchAllProducts from '../../utils/fetchers/fetch-all-products';
 import { GetServerSideProps } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

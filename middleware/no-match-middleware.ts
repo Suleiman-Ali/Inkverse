@@ -1,4 +1,4 @@
-import json from '../utils/json';
+import json from '../utils/helper-functions/json';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function globalNoMatchHandler(

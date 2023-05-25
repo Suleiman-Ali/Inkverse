@@ -2,7 +2,7 @@ import validator from 'validator';
 import runValidators from './hooks/run-validators';
 import deselectVProperty from './hooks/deselect-v-property';
 import { Schema, models, model } from 'mongoose';
-import { hashPassword } from '../utils/password-crypt';
+import { hashPassword } from '../utils/helper-functions/password-crypt';
 
 const UserSchema = new Schema({
   name: {

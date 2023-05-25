@@ -4,7 +4,6 @@ interface WrapperElementProps {
   children: ReactNode;
   className: string;
 }
-
 export default function WrapperElement({
   children,
   className,

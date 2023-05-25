@@ -1,4 +1,4 @@
-import TCategory from '../types/category-type';
+import TCategory from '../types/standard-types/category-type';
 
 export const PRICE_OPTIONS = [
   { label: '00$ - 10$', value: '0,10' },

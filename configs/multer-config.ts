@@ -1,5 +1,5 @@
 import multer from 'multer';
-import createError from '../utils/create-error';
+import createError from '../utils/helper-functions/create-error';
 
 const storage = multer.memoryStorage();
 const fileFilter = (req: any, file: any, cb: any) => {

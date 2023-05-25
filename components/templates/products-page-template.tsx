@@ -4,20 +4,20 @@ import WrapperElement from '../elements/common/wrapper-element';
 import ProductsLayoutModule from '../modules/products-page-modules/products-layout-module';
 import ProductsSearchModule from '../modules/products-page-modules/products-search-module';
 import LayoutIconsModule from '../modules/products-page-modules/layout-icons-module';
-import PaginationModule from '../modules/products-page-modules/pagination-module';
-import TCategory from '../../types/category-type';
-import TProduct from '../../types/product-type';
-import TProductsQuery from '../../types/products-query-type';
-import OptionsListModule from '../modules/products-page-modules/options-list-module';
+import PaginationModule from '../modules/common/pagination-module';
+import OptionsListModule from '../modules/common/options-list-module';
 import useLayout from '../../hooks/use-layout';
 import useReactiveEffect from '../../hooks/use-reactive-effect';
 import useReactiveDelayedEffect from '../../hooks/use-reactive-delayed-effect';
-import useProductsQueryState from '../../hooks/use-products-query-state';
+import useQueryState from '../../hooks/use-query-state';
+import TProductsQuery from '../../types/query-types/products-query-type';
+import TCategory from '../../types/standard-types/category-type';
+import TProduct from '../../types/standard-types/product-type';
 import {
   CATEGORIES_OPTIONS_MAPPER,
   PRICE_OPTIONS,
   SORT_OPTIONS,
-} from '../../static-data';
+} from '../../static-data/products-page-data';
 
 interface ProductsPageTemplateProps {
   categories: TCategory[];
@@ -34,10 +34,16 @@ export default function ProductsPageTemplate({
 }: ProductsPageTemplateProps) {
   const { layout, layoutChangeHandler } = useLayout('grid');
   const {
-    productsQuery: { name, category, price, sort, page },
-    productsQueryChangeHandler,
+    queryState: { name, category, price, sort, page },
+    queryStateChangeHandler,
     updatePageQuery,
-  } = useProductsQueryState(query);
+  } = useQueryState<TProductsQuery>('/products', {
+    category: query.category || '',
+    price: query.price || '',
+    sort: query.sort || '',
+    name: query.name || '',
+    page: query.page || '1',
+  });
   useReactiveEffect(updatePageQuery, [category, price, sort, page]);
   useReactiveDelayedEffect(updatePageQuery, [name], 300);
 
@@ -55,26 +61,26 @@ export default function ProductsPageTemplate({
             <WrapperElement className="flex flex-col gap-1">
               <ProductsSearchModule
                 current={name}
-                onChange={productsQueryChangeHandler}
+                onChange={queryStateChangeHandler}
               />
               <WrapperElement className="flex flex-col sm:flex-row gap-1">
                 <OptionsListModule
                   name="category"
                   items={CATEGORIES_OPTIONS_MAPPER(categories)}
                   current={category}
-                  onChange={productsQueryChangeHandler}
+                  onChange={queryStateChangeHandler}
                 />
                 <OptionsListModule
                   name="price"
                   items={PRICE_OPTIONS}
                   current={price}
-                  onChange={productsQueryChangeHandler}
+                  onChange={queryStateChangeHandler}
                 />
                 <OptionsListModule
                   name="sort"
                   items={SORT_OPTIONS}
                   current={sort}
-                  onChange={productsQueryChangeHandler}
+                  onChange={queryStateChangeHandler}
                 />
               </WrapperElement>
             </WrapperElement>
@@ -84,7 +90,7 @@ export default function ProductsPageTemplate({
             limit={21}
             count={count}
             current={page}
-            onChange={productsQueryChangeHandler}
+            onChange={queryStateChangeHandler}
           />
         </WrapperElement>
       </WrapperElement>

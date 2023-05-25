@@ -2,7 +2,7 @@ import CategoryCardModule from './category-card-module';
 import WrapperElement from '../../elements/common/wrapper-element';
 import PrimaryLinkElement from '../../elements/common/primary-link-element';
 import SectionTitleElement from '../../elements/home-page-elements/section-title-element';
-import TCategoryWithProducts from '../../../types/category-with-products-type';
+import TCategoryWithProducts from '../../../types/other/category-with-products-type';
 
 interface CategoryRowModuleProps {
   categories: TCategoryWithProducts[];

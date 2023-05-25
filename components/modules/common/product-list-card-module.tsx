@@ -1,7 +1,7 @@
+import WrapperElement from '../../elements/common/wrapper-element';
+import TProduct from '../../../types/standard-types/product-type';
 import Link from 'next/link';
 import Image from 'next/image';
-import TProduct from '../../../types/product-type';
-import WrapperElement from '../../elements/common/wrapper-element';
 
 interface ProductListCardModuleProps {
   product: TProduct;
@@ -26,7 +26,7 @@ export default function ProductListCardModule({
       <WrapperElement className="flex flex-col gap-1">
         <WrapperElement className="flex justify-between items-center gap-1">
           <p className="text-black text-base sm:text-lg">{name}</p>
-          <p className="text-black text-sm sm:text-base">{price}$</p>
+          <p className="text-black text-sm sm:text-base">${price}</p>
         </WrapperElement>
         <p className="text-gray text-xs sm:text-sm">
           {authorName} - {publicationDate}

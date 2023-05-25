@@ -1,4 +1,4 @@
-import createError from '../utils/create-error';
+import createError from '../utils/helper-functions/create-error';
 import { getSession } from 'next-auth/react';
 
 export default async function protect(req: any, res: any, next: any) {

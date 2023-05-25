@@ -1,4 +1,4 @@
-import createError from '../utils/create-error';
+import createError from '../utils/helper-functions/create-error';
 
 export default function restrictTo(role: 'admin' | 'user') {
   return (req: any, res: any, next: any) => {

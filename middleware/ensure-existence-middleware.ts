@@ -1,4 +1,4 @@
-import createError from '../utils/create-error';
+import createError from '../utils/helper-functions/create-error';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Model } from 'mongoose';
 

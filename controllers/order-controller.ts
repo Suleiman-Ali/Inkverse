@@ -1,13 +1,11 @@
 import Order from '../models/order-model';
 import CartProduct from '../models/cart-product-model';
 import createPayment from '../lib/create-payment';
-import json from '../utils/json';
-import manipulate from '../utils/query-manipulation';
+import manipulate from '../utils/helper-functions/query-manipulation';
+import json from '../utils/helper-functions/json';
+import calcAmount from '../utils/helper-functions/calc-amount';
+import cartProductsToOrderProducts from '../utils/helper-functions/cart-products-to-order-products';
 import { NextApiRequest, NextApiResponse } from 'next';
-import {
-  calcAmount,
-  cartProductsToOrderProducts,
-} from '../utils/helper-functions';
 
 // import stripe from '../configs/stripe-config';
 

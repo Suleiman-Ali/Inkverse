@@ -5,6 +5,7 @@ type TReview = {
   _id: string;
   user: TUser;
   product: TProduct;
+  title: string;
   text: string;
   rate: number;
   createdAt: number;

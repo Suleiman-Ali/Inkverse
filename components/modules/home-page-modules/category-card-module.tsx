@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import TCategoryWithProducts from '../../../types/category-with-products-type';
 import WrapperElement from '../../elements/common/wrapper-element';
+import TCategoryWithProducts from '../../../types/other/category-with-products-type';
 
 interface CategoryCardModuleProps {
   category: TCategoryWithProducts;

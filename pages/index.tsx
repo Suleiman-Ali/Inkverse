@@ -1,8 +1,9 @@
 import HomePageTemplate from '../components/templates/home-page-template';
 import dbConnect from '../configs/db-config';
-import TProduct from '../types/product-type';
-import TCategoryWithProducts from '../types/category-with-products-type';
-import { fetchTaggedCategories, fetchTaggedProducts } from '../utils/fetchers';
+import TProduct from '../types/standard-types/product-type';
+import TCategoryWithProducts from '../types/other/category-with-products-type';
+import fetchTaggedProducts from '../utils/fetchers/fetch-tagged-products';
+import fetchTaggedCategories from '../utils/fetchers/fetch-tagged-categories';
 
 export async function getServerSideProps() {
   await dbConnect();
@@ -42,7 +43,9 @@ export default function HomePage(props: HomePageProps) {
 //// NOTE: Frontend
 // DOING: HomePage
 // DOING: ProductsPage
-// TODO: ProductPage
+// DOING: ProductPage
+// TODO: SignUpPage
+// TODO: SignInPage
 
 // NOTE: All
 // TODO: Refactor

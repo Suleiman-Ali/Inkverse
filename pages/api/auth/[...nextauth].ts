@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import dbConnect from '../../../configs/db-config';
 import User from '../../../models/user-model';
-import { comparePasswords } from '../../../utils/password-crypt';
+import { comparePasswords } from '../../../utils/helper-functions/password-crypt';
 
 export default NextAuth({
   session: { strategy: 'jwt' },

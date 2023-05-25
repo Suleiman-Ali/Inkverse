@@ -1,5 +1,5 @@
 import WrapperElement from '../../elements/common/wrapper-element';
-import { numberToPaginationArray } from '../../../utils/helper-functions';
+import numberToPaginationArray from '../../../utils/helper-functions/number-to-pagination-array';
 
 interface PaginationModuleProps {
   count: number;

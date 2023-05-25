@@ -1,7 +1,7 @@
 import WrapperElement from '../../elements/common/wrapper-element';
 import ProductCardModule from '../common/product-card-module';
 import ProductListCardModule from '../common/product-list-card-module';
-import TProduct from '../../../types/product-type';
+import TProduct from '../../../types/standard-types/product-type';
 
 interface ProductsLayoutModuleProps {
   layout: 'grid' | 'list';

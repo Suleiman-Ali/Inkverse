@@ -1,6 +1,6 @@
 import User from '../models/user-model';
-import manipulate from '../utils/query-manipulation';
-import json from '../utils/json';
+import manipulate from '../utils/helper-functions/query-manipulation';
+import json from '../utils/helper-functions/json';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { uploadImage } from '../lib/upload-image';
 

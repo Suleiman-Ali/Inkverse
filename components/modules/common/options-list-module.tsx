@@ -19,6 +19,7 @@ export default function OptionsListModule({
   const changeHandler = (arg: any) => onChange(name, arg?.value || '');
   return (
     <Select
+      menuShouldScrollIntoView={false}
       className="w-full"
       isClearable={true}
       isSearchable={false}

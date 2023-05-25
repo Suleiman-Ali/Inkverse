@@ -1,4 +1,4 @@
-import TProduct from '../../../types/product-type';
+import TProduct from '../../../types/standard-types/product-type';
 import PrimaryLinkElement from '../../elements/common/primary-link-element';
 import WrapperElement from '../../elements/common/wrapper-element';
 import SectionTitleElement from '../../elements/home-page-elements/section-title-element';

@@ -1,12 +1,12 @@
 import Review from '../models/review-model';
-import manipulate from '../utils/query-manipulation';
-import json from '../utils/json';
+import manipulate from '../utils/helper-functions/query-manipulation';
+import json from '../utils/helper-functions/json';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function createReview(req: any, res: NextApiResponse) {
   const { id: user } = req.user;
-  const { text, product, rate } = req.body;
-  const review = await Review.create({ user, product, text, rate });
+  const { title, text, product, rate } = req.body;
+  const review = await Review.create({ user, product, title, text, rate });
   res.status(201).json(json({ review }));
 }
 
